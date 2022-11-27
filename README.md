@@ -1,5 +1,6 @@
 # progdoc
 progdoc是一种简易文档格式，主要用于编写程序设计和软件开发相关文档。
+
 一、解析程序
 可在主页的release处下载windows环境的可执行程序。
 也可下载 progdoc.zig 源代码后，执行：
