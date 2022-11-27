@@ -19,9 +19,9 @@ $ progdoc xxx
 
 三、progdoc文档格式说明
 
-参看[progdoc文档格式]( https://sxwangzhiwen.github.io/progdoc/)
+参看[progdoc文档格式]( https://sxwangzhiwen.github.io/progdoc/progdoc.html)
 
 
 四、无英文说明
 
-因本人英文太差，所以以中文为主，不提供英文版本。
+因本人英文太差，所以不提供英文版本。

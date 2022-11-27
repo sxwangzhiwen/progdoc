@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>progdoc格式</title>
+<style>
+:root{
+    --nav-width: 24em;
+    --nav-margin-l: 1em;
+}
+body{
+    margin: 0;
+    line-height: 1.5;
+}
+#contents {
+    max-width: 60em;
+    margin: auto;
+    padding: 0 1em;
+}
+#navigation {
+    padding: 0 1em;
+}
+@media screen and (min-width: 1025px) {
+    #navigation {
+        overflow: auto;
+        width: var(--nav-width);
+        height: 100vh;
+        position: fixed;
+        top:0;
+        left:0;
+        bottom:0;
+        padding: unset;
+        margin-left: var(--nav-margin-l);
+    }
+    #contents-wrapper {
+        margin-left: calc(var(--nav-width) + var(--nav-margin-l));
+    }
+}
+table, td {
+    border-collapse: collapse;
+    border: 1px solid grey;
+    text-align:left;
+    vertical-align:middle;
+}
+td {
+    padding: 0.1em;
+}
+.file {
+    font-weight: bold;
+    border: unset;
+}
+code {
+    background: #f8f8f8;
+    border: 1px dotted silver;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+}
+pre > code {
+    display: block;
+    overflow: auto;
+    padding: 0.5em;
+    border: 1px solid #eee;
+    line-height: normal;
+}
+figure {
+    margin: auto 0;
+}
+figure pre {
+    margin-top: 0;
+}
+figcaption {
+    padding-left: 0.5em;
+    font-size: small;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+figcaption.zig-cap {
+    background: #fcdba5;
+}
+figcaption.c-cap {
+    background: #a8b9cc;
+    color: #000;
+}
+figcaption.shell-cap {
+    background: #ccc;
+    color: #000;
+}
+aside {
+    border-left: 0.25em solid #f7a41d;
+    padding: 0 1em 0 1em;
+}
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+    text-decoration: none;
+    color: #333;
+}
+a.hdr {
+    visibility: hidden;
+}
+h1:hover > a.hdr, h2:hover > a.hdr, h3:hover > a.hdr, h4:hover > a.hdr, h5:hover > a.hdr, h6:hover > a.hdr {
+    visibility: visible;
+}
+pre {
+    counter-reset: line;
+}
+pre .line:before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    padding-right: 1em;
+    width: 2em;
+    text-align: right;
+    color: #999;
+}
+.t_left{
+    text-align:left;
+}
+.t_right{
+    text-align:right;
+}
+.t_center{
+    text-align:center;
+}
+.t_justify{
+    text-align:justify;
+}
+.tv_top{
+    vertical-align:top;
+}
+.tv_middle{
+    vertical-align:middle;
+}
+.tv_bottom{
+    vertical-align:bottom;
+}
+</style>
+</head>
+<body>
+<div id="navigation">
+<ul>
+<li><a id="toc-1. 简介" href="#N1. 简介">1. 简介</a></li><li><a id="toc-1.1. progdoc格式主页" href="#N1.1. progdoc格式主页">&nbsp;&nbsp;1.1. progdoc格式主页</a></li><li><a id="toc-2. 太长不看版" href="#N2. 太长不看版">2. 太长不看版</a></li><li><a id="toc-3. 文档描述约定" href="#N3. 文档描述约定">3. 文档描述约定</a></li><li><a id="toc-3.1. 特定大写字母含义" href="#N3.1. 特定大写字母含义">&nbsp;&nbsp;3.1. 特定大写字母含义</a></li><li><a id="toc-3.2. 格式字符串格式字符含义" href="#N3.2. 格式字符串格式字符含义">&nbsp;&nbsp;3.2. 格式字符串格式字符含义</a></li><li><a id="toc-3.3. 格式描述说明" href="#N3.3. 格式描述说明">&nbsp;&nbsp;3.3. 格式描述说明</a></li><li><a id="toc-4. 行分类" href="#N4. 行分类">4. 行分类</a></li><li><a id="toc-5. 格式正文行" href="#N5. 格式正文行">5. 格式正文行</a></li><li><a id="toc-5.1. 实体替换" href="#N5.1. 实体替换">&nbsp;&nbsp;5.1. 实体替换</a></li><li><a id="toc-5.2. 短代码" href="#N5.2. 短代码">&nbsp;&nbsp;5.2. 短代码</a></li><li><a id="toc-5.3. 行代码" href="#N5.3. 行代码">&nbsp;&nbsp;5.3. 行代码</a></li><li><a id="toc-5.4. 内链" href="#N5.4. 内链">&nbsp;&nbsp;5.4. 内链</a></li><li><a id="toc-5.5. 外链" href="#N5.5. 外链">&nbsp;&nbsp;5.5. 外链</a></li><li><a id="toc-5.6. 图片" href="#N5.6. 图片">&nbsp;&nbsp;5.6. 图片</a></li><li><a id="toc-6. 标题行" href="#N6. 标题行">6. 标题行</a></li><li><a id="toc-7. 多行代码类" href="#N7. 多行代码类">7. 多行代码类</a></li><li><a id="toc-7.1. 多行代码代码行" href="#N7.1. 多行代码代码行">&nbsp;&nbsp;7.1. 多行代码代码行</a></li><li><a id="toc-7.2. 多行代码行S" href="#N7.2. 多行代码行S">&nbsp;&nbsp;7.2. 多行代码行S</a></li><li><a id="toc-7.3. 多行代码行SE" href="#N7.3. 多行代码行SE">&nbsp;&nbsp;7.3. 多行代码行SE</a></li><li><a id="toc-8. 列表类" href="#N8. 列表类">8. 列表类</a></li><li><a id="toc-8.1. 列表行中正文内容" href="#N8.1. 列表行中正文内容">&nbsp;&nbsp;8.1. 列表行中正文内容</a></li><li><a id="toc-8.2. 单行列表行" href="#N8.2. 单行列表行">&nbsp;&nbsp;8.2. 单行列表行</a></li><li><a id="toc-8.3. 多行列表行S" href="#N8.3. 多行列表行S">&nbsp;&nbsp;8.3. 多行列表行S</a></li><li><a id="toc-8.4. 多行列表行E" href="#N8.4. 多行列表行E">&nbsp;&nbsp;8.4. 多行列表行E</a></li><li><a id="toc-9. 表格类" href="#N9. 表格类">9. 表格类</a></li><li><a id="toc-9.1. 表格行中正文内容" href="#N9.1. 表格行中正文内容">&nbsp;&nbsp;9.1. 表格行中正文内容</a></li><li><a id="toc-9.2. 单行表格行" href="#N9.2. 单行表格行">&nbsp;&nbsp;9.2. 单行表格行</a></li><li><a id="toc-9.3. 多行表格行SE" href="#N9.3. 多行表格行SE">&nbsp;&nbsp;9.3. 多行表格行SE</a></li><li><a id="toc-10. 内嵌html类" href="#N10. 内嵌html类">10. 内嵌html类</a></li><li><a id="toc-10.1. 内嵌html中正文内容" href="#N10.1. 内嵌html中正文内容">&nbsp;&nbsp;10.1. 内嵌html中正文内容</a></li><li><a id="toc-10.2. 内嵌html多行S" href="#N10.2. 内嵌html多行S">&nbsp;&nbsp;10.2. 内嵌html多行S</a></li><li><a id="toc-10.3. 内嵌html多行E" href="#N10.3. 内嵌html多行E">&nbsp;&nbsp;10.3. 内嵌html多行E</a></li><li><a id="toc-11. 作者及版权说明" href="#N11. 作者及版权说明">11. 作者及版权说明</a></li></ul>
+</div>
+<div id="contents-wrapper">
+<main id="contents">
+<p>progdoc格式说明</p>
+<p></p>
+<h1 id="N1. 简介"><a href="#toc-1. 简介">1. 简介</a></h1>
+<p>progdoc格式主要用于编写软件开发和程序设计方面的设计、使用说明、API等文档。</p>
+<p>progdoc把符合progdoc格式的文本文件转换为单一html文件。</p>
+<p>progdoc格式文件的文件名后缀通常是 <code>.pd</code> ，文件编码必须是UTF-8。</p>
+<p>progdoc格式设计原则为：</p>
+<ul>
+<li> 格式尽可能简约，以降低学习使用难度</li>
+<li> 使用 # ` 这两个程序设计中很少使用的字符作为格式前导字符</li>
+<li> 有内嵌html功能，以用于文档中插入latex数学公式等需求</li>
+</ul>
+<p></p>
+<h2 id="N1.1. progdoc格式主页"><a href="#toc-1.1. progdoc格式主页">1.1. progdoc格式主页</a></h2>
+<p>progdoc格式解析程序、格式说明和使用方法请看：</p>
+<ul>
+<li> <a href="https://sxwangzhiwen.github.io/progdoc/">progdoc 国外主页</a></li>
+<li> <a href="https://sxwangzhiwen.github.io/progdoc/">progdoc 国内主页</a></li>
+</ul>
+<p></p>
+<h1 id="N2. 太长不看版"><a href="#toc-2. 太长不看版">2. 太长不看版</a></h1>
+<table>
+<tr>
+<td>格式			</td>
+<td>名称				</td>
+<td>说明</td>
+</tr>
+<tr>
+<td>正文格式		</td>
+<td>				</td>
+<td></td>
+</tr>
+<tr>
+<td><code>[[AA]]</code>		</td>
+<td><a href="#N5.4. 内链">5.4. 内链</a>			</td>
+<td>指向文档内部锚点</td>
+</tr>
+<tr>
+<td><code>#[AA#](BB)</code>		</td>
+<td><a href="#N5.5. 外链">5.5. 外链</a>			</td>
+<td>AA是外链说明，BB是外部链接</td>
+</tr>
+<tr>
+<td><code>!#[AA#](BB)</code>		</td>
+<td><a href="#N5.6. 图片">5.6. 图片</a>			</td>
+<td>AA是图片说明，BB是图片链接</td>
+</tr>
+<tr>
+<td>`AA`		</td>
+<td><a href="#N5.2. 短代码">5.2. 短代码</a>		</td>
+<td>AA可以是任意字符，不参与格式解析</td>
+</tr>
+<tr>
+<td>``AA$		</td>
+<td><a href="#N5.3. 行代码">5.3. 行代码</a>		</td>
+<td>从``开始到行尾的字符不参与格式解析</td>
+</tr>
+<tr>
+<td>#`			</td>
+<td><a href="#N5.1. 实体替换">5.1. 实体替换</a>		</td>
+<td>用 #` 来表示不起格式作用的 ` 字符</td>
+</tr>
+<tr>
+<td>行分类		</td>
+<td>				</td>
+<td></td>
+</tr>
+<tr>
+<td><code>^{数字+.}+AA</code>	</td>
+<td><a href="#N6. 标题行">6. 标题行</a>			</td>
+<td>每个标题行是锚点，也是目录一项，多少个点就是多少级标题</td>
+</tr>
+<tr>
+<td>多行代码类		</td>
+<td>				</td>
+<td></td>
+</tr>
+<tr>
+<td>```AA		</td>
+<td><a href="#N7.2. 多行代码行S">7.2. 多行代码行S</a>		</td>
+<td>多行代码行的开始，后续均看作代码行，不作格式解析</td>
+</tr>
+<tr>
+<td><code>^```$</code>		</td>
+<td><a href="#N7.3. 多行代码行SE">7.3. 多行代码行SE</a>		</td>
+<td>根据上下文，可当成多行代码行的开始行或结束行</td>
+</tr>
+<tr>
+<td>列表类		</td>
+<td>				</td>
+<td></td>
+</tr>
+<tr>
+<td><code>^{空白+}#-AA$</code>	</td>
+<td><a href="#N8.2. 单行列表行">8.2. 单行列表行</a>		</td>
+<td>列表内不能有其它类的格式行（如表格、多行代码等）</td>
+</tr>
+<tr>
+<td><code>^{空白+}#--AA$</code>	</td>
+<td><a href="#N8.3. 多行列表行S">8.3. 多行列表行S</a>		</td>
+<td>列表的多行列表项的开始行</td>
+</tr>
+<tr>
+<td><code>^{空白+}#--$</code>	</td>
+<td><a href="#N8.4. 多行列表行E">8.4. 多行列表行E</a>		</td>
+<td>列表的多行列表项的结束行</td>
+</tr>
+<tr>
+<td>表格类		</td>
+<td>				</td>
+<td></td>
+</tr>
+<tr>
+<td><code>^#|GAA#|GBB..#|GNN$</code>	</td>
+<td><a href="#N9.2. 单行表格行">9.2. 单行表格行</a>		</td>
+<td>G是对齐字符，&lt; 左对齐，&gt; 右对齐，^ 居中</td>
+</tr>
+<tr>
+<td><code>^#|-AA$</code>		</td>
+<td><a href="#N9.3. 多行表格行SE">9.3. 多行表格行SE</a>		</td>
+<td>AA是任意填充字符，不作格式解析不参与输出</td>
+</tr>
+<tr>
+<td>内嵌html类		</td>
+<td>				</td>
+<td></td>
+</tr>
+<tr>
+<td><code>^#&lt;&lt;AA$</code>		</td>
+<td><a href="#N10.2. 内嵌html多行S">10.2. 内嵌html多行S</a>	</td>
+<td>内嵌html多行的开始行，后续行不做任何格式解析，原样输出</td>
+</tr>
+<tr>
+<td><code>^#&gt;&gt;AA$</code>		</td>
+<td><a href="#N10.3. 内嵌html多行E">10.3. 内嵌html多行E</a>	</td>
+<td>内嵌html多行的结束行</td>
+</tr>
+</table>
+<p></p>
+<h1 id="N3. 文档描述约定"><a href="#toc-3. 文档描述约定">3. 文档描述约定</a></h1>
+<h2 id="N3.1. 特定大写字母含义"><a href="#toc-3.1. 特定大写字母含义">3.1. 特定大写字母含义</a></h2>
+<ul>
+<li> S 开始</li>
+<li> C 继续</li>
+<li> E 结束</li>
+<li> AAA 或 BBB 表示若干个普通格式正文字符</li>
+</ul>
+<p></p>
+<h2 id="N3.2. 格式字符串格式字符含义"><a href="#toc-3.2. 格式字符串格式字符含义">3.2. 格式字符串格式字符含义</a></h2>
+<ul>
+<li> ^ 在格式字符串的最前面，则表示行首</li>
+<li> $ 在格式字符串的最后面，则表示行尾</li>
+<li> + 表示1个或多个</li>
+<li> {AB} 表示AB是1个最小单元整体</li>
+<li> 空白字符，是指空格符和水平制表符。</li>
+</ul>
+<p></p>
+<h2 id="N3.3. 格式描述说明"><a href="#toc-3.3. 格式描述说明">3.3. 格式描述说明</a></h2>
+<ul>
+<li> 格式：该格式的格式字符和相关正文的描述规则</li>
+<li> 行首尾：对行首或行尾有无特殊约定</li>
+<li> 禁用字符：该格式内的禁用字符或禁用字符串</li>
+<li> 字符替换：该格式内对哪些字符进行输出字符替换</li>
+<li> 内部格式：该格式内允许有哪些内部格式</li>
+<li> 说明：其它说明</li>
+<li> 示例：使用示例，分两部分：源文本是格式文本内容，实际效果是解析后html的显示效果。</li>
+</ul>
+<p></p>
+<h1 id="N4. 行分类"><a href="#toc-4. 行分类">4. 行分类</a></h1>
+<p>progdoc对输入文件按行分类，进行格式解析。行的类别有：</p>
+<ul>
+<li> 格式正文行</li>
+<li> 标题行</li>
+<li><span> 多行代码类</span>
+<ul>
+<li> 多行代码行S</li>
+<li> 多行代码行SE</li>
+</ul>
+</li>
+<li><span> 列表类</span>
+<ul>
+<li> 单行列表行</li>
+<li> 多行列表行S</li>
+<li> 多行列表行E</li>
+</ul>
+</li>
+<li><span> 表格类</span>
+<ul>
+<li> 单行表格行</li>
+<li> 多行表格行SE</li>
+</ul>
+</li>
+<li><span> 内嵌html类</span>
+<ul>
+<li> 内嵌html多行S</li>
+<li> 内嵌html多行E</li>
+</ul>
+</li>
+</ul>
+<p></p>
+<h1 id="N5. 格式正文行"><a href="#toc-5. 格式正文行">5. 格式正文行</a></h1>
+<p>格式：不符合其它格式行的所有行</p>
+<p>行首尾：无特殊约定</p>
+<p>禁用字符：无</p>
+<p>字符替换：&lt; &gt; #` 分别被替换为 &amp;lt; &amp;gt; `</p>
+<p>内部格式：允许短代码、行代码、内链、外链、图片</p>
+<p>说明：</p>
+<p>示例：</p>
+<p>源文本：</p>
+<p><code> 中国国内源代码托管网站有：#[gitee#](https://gitee.com)，程序员的第1行代码大多数是类似于 `print("hello world")`</code></p>
+<p>实际效果：</p>
+<p>国内源代码托管网站有：<a href="https://gitee.com">gitee</a>，程序员的第1行代码大多数是类似于 <code>print("hello world")</code></p>
+<p></p>
+<h2 id="N5.1. 实体替换"><a href="#toc-5.1. 实体替换">5.1. 实体替换</a></h2>
+<p>因为在html中，&lt; &gt; 有特殊含义，用于标签格式；` 在progdoc中，表示代码格式字符。</p>
+<p>所以在绝大多数情况下，要对这三个字符进行替换。</p>
+<table>
+<tr>
+<td>原字符</td>
+<td>输出替换字符</td>
+</tr>
+<tr>
+<td> &lt;    </td>
+<td>&amp;lt;</td>
+</tr>
+<tr>
+<td> &gt;    </td>
+<td>&amp;gt;</td>
+</tr>
+<tr>
+<td>#`	</td>
+<td>`</td>
+</tr>
+</table>
+<p></p>
+<h2 id="N5.2. 短代码"><a href="#toc-5.2. 短代码">5.2. 短代码</a></h2>
+<p>格式：<code> `AAA`  A是任意字符，该字符不能是 `</code></p>
+<p>行首尾：无特殊约定，开始和结尾的` 必须在同一行内。</p>
+<p>禁用字符：`  想在短代码中用 `，用 #` 字符串来表示。</p>
+<p>字符替换：&lt; &gt; #` 分别被替换为 &amp;lt; &amp;gt; `</p>
+<p>内部格式：普通正文</p>
+<p>说明：主要用于正文中的源代码，或者用于把其它格式字符串当普通正文处理。</p>
+<p>示例：</p>
+<p>源文本：</p>
+<p><code> 这是短代码示例，如：`逃逸 #[ [[`；或`a[i] = 5`表示数组索引。</code></p>
+<p>实际效果：</p>
+<p>这是短代码示例，如：<code>逃逸 #[ [[</code>；或<code>a[i] = 5</code>表示数组索引。</p>
+<p></p>
+<h2 id="N5.3. 行代码"><a href="#toc-5.3. 行代码">5.3. 行代码</a></h2>
+<p>格式：<code> `` AAA$ A是任意字符</code></p>
+<p>行首尾：无特殊约定</p>
+<p>禁用字符：无，` 可正常输出为 ` 字符</p>
+<p>字符替换：&lt; &gt; #` 分别被替换为 &amp;lt; &amp;gt; `</p>
+<p>内部格式：普通正文</p>
+<p>说明：从 `` 开始一直到行尾均做为代码；在表格的单元格中慎重使用，因为把 #| 当普通字符串解析。</p>
+<p>示例：</p>
+<p>源文本：</p>
+<p><code> 这是行代码示例，如：`` #|在行代码中不能当做单元格区隔来用。</code></p>
+<p>实际效果：</p>
+<p>这是行代码示例，如：<code> #|在行代码中不能当做单元格区隔来用。</code></p>
+<p></p>
+<h2 id="N5.4. 内链"><a href="#toc-5.4. 内链">5.4. 内链</a></h2>
+<p>格式：<code> [[AAA]]</code></p>
+<p>行首尾：无特殊约定</p>
+<p>禁用字符： <code>[[</code> <code>]]</code></p>
+<p>字符替换：&lt; &gt; #` 分别被替换为 &amp;lt; &amp;gt; `</p>
+<p>内部格式：普通正文+短代码</p>
+<p>说明：内链是指向文档中的锚点，在progdoc中，锚点只能是标题。注意：内链中的文本AAA须与标题完全一样，否则无效。</p>
+<p>示例：</p>
+<p>源文本：</p>
+<p><code> progdoc的行分类参见[[4. 行分类]]。</code></p>
+<p>实际效果：</p>
+<p>progdoc的行分类参见<a href="#N4. 行分类">4. 行分类</a>。</p>
+<p></p>
+<h2 id="N5.5. 外链"><a href="#toc-5.5. 外链">5.5. 外链</a></h2>
+<p>格式：<code> #[AAA#](BBB) AAA是外链说明，BBB是外链链接。</code></p>
+<p>行首尾：无特殊约定</p>
+<p>禁用字符：AAA中，禁用 <code>#[</code> <code>#]</code> 字符串，BBB中，禁用<code>(</code> <code>)</code>字符。</p>
+<p>字符替换：&lt; &gt; #` 分别被替换为 &amp;lt; &amp;gt; `</p>
+<p>内部格式：AAA中是普通正文+短代码，BBB中是普通正文</p>
+<p>说明：外链是指向外部链接的，注意：BBB尽量符合URL编码规范。</p>
+<p>示例：</p>
+<p>源文本：</p>
+<p><code> 近年来，较新的程序设计语言有#[Zig语言#](https://ziglang.org/zh/)、#[rust语言#](https://www.rust-lang.org/zh-CN/)等。</code></p>
+<p>实际效果：</p>
+<p>近年来，较新的程序设计语言有<a href="https://ziglang.org/zh/">Zig语言</a>、<a href="https://www.rust-lang.org/zh-CN/">rust语言</a>等。</p>
+<p></p>
+<h2 id="N5.6. 图片"><a href="#toc-5.6. 图片">5.6. 图片</a></h2>
+<p>格式：<code> !#[AAA#](BBB) AAA是图片说明，BBB是图片链接。</code></p>
+<p>行首尾：无特殊约定</p>
+<p>禁用字符：AAA中，禁用 <code>#[</code> <code>#]</code> 字符串，BBB中，禁用<code>(</code> <code>)</code>字符。</p>
+<p>字符替换：&lt; &gt; #` 分别被替换为 &amp;lt; &amp;gt; `</p>
+<p>内部格式：AAA中是普通正文+短代码，BBB中是普通正文</p>
+<p>说明：图片是指向外部链接图片的，注意：BBB尽量符合URL编码规范。</p>
+<p>示例：</p>
+<p>源文本：</p>
+<p><code> 中国第五套人民币100元图样：!#[正面#](http://www.cbpm.cn/cn/rmbpic/dwtnesw/nffl/qbnf/201911/P020220714546661471829.png)，!#[背面#](http://www.cbpm.cn/cn/rmbpic/dwtnesw/nffl/qbnf/201911/P020220714546661509320.png)</code></p>
+<p>实际效果：</p>
+<p>中国第五套人民币100元图样：<img src="http://www.cbpm.cn/cn/rmbpic/dwtnesw/nffl/qbnf/201911/P020220714546661471829.png" alt="正面" />，<img src="http://www.cbpm.cn/cn/rmbpic/dwtnesw/nffl/qbnf/201911/P020220714546661509320.png" alt="背面" /></p>
+<p></p>
+<h1 id="N6. 标题行"><a href="#toc-6. 标题行">6. 标题行</a></h1>
+<p>格式：<code> ^{数字+.}+ AAA$</code></p>
+<p>行首尾：行首必须是数字开头的，不允许有空白字符</p>
+<p>禁用字符：不建议用 <code>[[</code> <code>]]</code> 字符</p>
+<p>字符替换：&lt; &gt; #` 分别被替换为 &amp;lt; &amp;gt; `</p>
+<p>内部格式：只允许短代码，其它格式字符按普通字符处理</p>
+<p>说明：为降低复杂性，及分析实际编写中的需求必要性，在progdoc格式中，锚点（即内链指向）只能是标题行。</p>
+<p>建议写文档时，章节的篇幅尽量短少，如果章节篇幅过长，要重新考虑文章架构。</p>
+<p>最多有六级标题，有几个句点就表示几级标题。如：1. 是一级标题； 1.5.3. 是三级标题。 2.4.3.5.7.6.8.9. 是六级标题。</p>
+<p>每一行标题是生成一个目录项，最终生成的目录在文档的左侧边或一开始显示（根据显示屏宽度而定）。</p>
+<p>示例：</p>
+<p>参见本文档中的各标题。</p>
+<p></p>
+<h1 id="N7. 多行代码类"><a href="#toc-7. 多行代码类">7. 多行代码类</a></h1>
+<p>多行代码是指1行或1行以上以代码形式输出。</p>
+<p></p>
+<h2 id="N7.1. 多行代码代码行"><a href="#toc-7.1. 多行代码代码行">7.1. 多行代码代码行</a></h2>
+<p>格式：<code> ^AAA$ AAA是任意字符</code></p>
+<p>行首尾：无特殊约定</p>
+<p>禁用字符：无</p>
+<p>字符替换：&lt; &gt; 分别被替换为 &amp;lt; &amp;gt; 注意：不对#`进行替换。</p>
+<p>内部格式：所有格式字符失效，视做普通正文</p>
+<p>说明：多行代码行自动加行号。</p>
+<p>示例：</p>
+<p>源文本：</p>
+<p><code> ``` hello.c</code></p>
+<p><code> #include &lt;stdio.h&gt;</code></p>
+<p><code> int main(){</code></p>
+<p><code> 	printf("hello world\n");</code></p>
+<p><code> }</code></p>
+<p><code> ```</code></p>
+<p>实际效果：</p>
+<figure>
+	<figcaption class="c-cap">
+		<cite class="file">hello.c</cite>
+	</figcaption>
+<pre><code>
+<span class="line">#include &lt;stdio.h&gt;</span>
+<span class="line">int main(){</span>
+<span class="line">	printf("hello world\n");</span>
+<span class="line">}</span>
+</code></pre></figure>
+<p></p>
+<h2 id="N7.2. 多行代码行S"><a href="#toc-7.2. 多行代码行S">7.2. 多行代码行S</a></h2>
+<p>格式：<code> ^``` AAA$</code></p>
+<p>行首尾：行首必须是```开头的，且不允许有空白字符</p>
+<p>禁用字符：&lt; &gt; 建议AAA尽量是普通字符</p>
+<p>字符替换：无</p>
+<p>内部格式：所有格式字符失效，AAA视做普通正文</p>
+<p>说明：AAA通常是多行代码行对应的文件名，根据文件名后缀增加输出的html文档class属性。</p>
+<p>示例：</p>
+<p>见<a href="#N7.1. 多行代码代码行">7.1. 多行代码代码行</a></p>
+<p></p>
+<h2 id="N7.3. 多行代码行SE"><a href="#toc-7.3. 多行代码行SE">7.3. 多行代码行SE</a></h2>
+<p>格式：<code> ^```$</code></p>
+<p>行首尾：行首和行尾中间只能是```字符串，不允许有空白字符或其它字符</p>
+<p>禁用字符：无</p>
+<p>字符替换：无</p>
+<p>内部格式：无</p>
+<p>说明：如果当前不是多行代码行继续状态，则表示新开始1个多行代码行块，访代码行块没有名字；</p>
+<p>如果当前是多行代码行继续状态，则表示结束当前多行代码行块。</p>
+<p>多行代码行SE必须成对使用，或者和多行代码行S成对使用，否则出错。</p>
+<p>示例：</p>
+<p>源文本：</p>
+<p><code> 这是多行代码行示例：</code></p>
+<p><code> ```</code></p>
+<p><code> for(int i=0;i&lt;LEN;i++){</code></p>
+<p><code>	if(array[i]!='\n') array[i]++;</code></p>
+<p><code> }</code></p>
+<p><code> ```</code></p>
+<p>实际效果：</p>
+<p>这是多行代码行示例：</p>
+<figure>
+	<figcaption class="-cap">
+		<cite class=""></cite>
+	</figcaption>
+<pre><code>
+<span class="line">for(int i=0;i&lt;LEN;i++){</span>
+<span class="line">	if(array[i]&gt;MIN) array[i]++;</span>
+<span class="line">}</span>
+</code></pre></figure>
+<p></p>
+<h1 id="N8. 列表类"><a href="#toc-8. 列表类">8. 列表类</a></h1>
+<p>单行列表行是指每一行是一个列表项。多行列表行是指一个列表项有多个连续行组成。</p>
+<p>把列表分为单行列表行和多行列表行，以支持多级列表。</p>
+<p>多行列表行中，仅支持普通格式正文行，不支持标题行、表格行类、多行代码行类、内嵌html行类。</p>
+<p>多行表格行内可支持列表。</p>
+<p></p>
+<h2 id="N8.1. 列表行中正文内容"><a href="#toc-8.1. 列表行中正文内容">8.1. 列表行中正文内容</a></h2>
+<p>格式：<code> AAA AAA是任意字符</code></p>
+<p>行首尾：无特殊约定</p>
+<p>禁用字符：无</p>
+<p>字符替换：&lt; &gt; #` 分别被替换为 &amp;lt; &amp;gt; `</p>
+<p>内部格式：与普通格式正文行一样，允许短代码、行代码、内链、外链、图片。</p>
+<p>说明：在表格中的列表可以正确识别 #| 单元格分隔符。</p>
+<p>示例：</p>
+<p>源文本：</p>
+<figure>
+	<figcaption class="-cap">
+		<cite class=""></cite>
+	</figcaption>
+<pre><code>
+<span class="line">#- 列表项一</span>
+<span class="line">#- 列表项二</span>
+<span class="line">#-- 列表项三</span>
+<span class="line">    列表项三说明文字</span>
+<span class="line">	#- 列表项三.一</span>
+<span class="line">	#- 列表项三.二</span>
+<span class="line">	#-- 列表项三.三</span>
+<span class="line">	列表项三.三说明文字</span>
+<span class="line">		#- 列表项三.三.一</span>
+<span class="line">		#- 列表项三.三.二</span>
+<span class="line">	#--</span>
+<span class="line">	#- 列表项三.四</span>
+<span class="line">#--</span>
+<span class="line">#- 列表项四</span>
+</code></pre></figure>
+<p>实际效果：</p>
+<ul>
+<li> 列表项一</li>
+<li> 列表项二</li>
+<li><span> 列表项三</span>
+<br /><span>    列表项三说明文字</span>
+<ul>
+<li> 列表项三.一</li>
+<li> 列表项三.二</li>
+<li><span> 列表项三.三</span>
+<br /><span>	列表项三.三说明文字</span>
+<ul>
+<li> 列表项三.三.一</li>
+<li> 列表项三.三.二</li>
+</ul>
+</li>
+<li> 列表项三.四</li>
+</ul>
+</li>
+<li> 列表项四</li>
+</ul>
+<p></p>
+<h2 id="N8.2. 单行列表行"><a href="#toc-8.2. 单行列表行">8.2. 单行列表行</a></h2>
+<p>格式：<code> ^{空白字符+}#-AAA$  或  #|{空白字符+}#-AAA #| ，这是表格单元格中的列表</code></p>
+<p>行首尾：行首允许有空白字符</p>
+<p>禁用字符：尽量不要用 #| 字符串，因为在表格中会当作单元格区隔。 需要用的话，用短代码方式。</p>
+<p>字符替换：&lt; &gt; #` 分别被替换为 &amp;lt; &amp;gt; `</p>
+<p>内部格式：与普通格式正文行一样，允许短代码、行代码、内链、外链、图片。</p>
+<p>说明：单行列表行每一行是列表中的一项。</p>
+<p>示例：</p>
+<p>见<a href="#N8.1. 列表行中正文内容">8.1. 列表行中正文内容</a></p>
+<p></p>
+<h2 id="N8.3. 多行列表行S"><a href="#toc-8.3. 多行列表行S">8.3. 多行列表行S</a></h2>
+<p>格式：<code> ^{空白字符+}#--AAA$  或  #|{空白字符+}#--AAA #| ，这是表格单元格中的列表</code></p>
+<p>行首尾：行首允许有空白字符</p>
+<p>禁用字符：尽量不要用 #| 字符串，因为在表格中会当作单元格区隔。 需要用的话，用短代码方式。</p>
+<p>字符替换：&lt; &gt; #` 分别被替换为 &amp;lt; &amp;gt; `</p>
+<p>内部格式：与普通格式正文行一样，允许短代码、行代码、内链、外链、图片。</p>
+<p>说明：该行表示多行列表行的开始，即从这一行到对应的多行列表行E，之间的普通正文行和单行列表行，统一做为列表的一个列表项。</p>
+<p>一个多行列表行S必须有一个对应的多行列表行E，反之亦然。</p>
+<p>示例：</p>
+<p>见<a href="#N8.1. 列表行中正文内容">8.1. 列表行中正文内容</a></p>
+<p></p>
+<h2 id="N8.4. 多行列表行E"><a href="#toc-8.4. 多行列表行E">8.4. 多行列表行E</a></h2>
+<p>格式：<code> ^{空白字符+}#--$  或  #|{空白字符+}#--#| ，这是表格单元格中的列表</code></p>
+<p>行首尾：行首允许有空白字符，行尾不允许有任何其它字符。</p>
+<p>禁用字符：无</p>
+<p>字符替换：无</p>
+<p>内部格式：无</p>
+<p>说明：该行表示多行列表行的结束。注意：行尾或单元格尾不允许有任何其它字符。</p>
+<p>示例：</p>
+<p>见<a href="#N8.1. 列表行中正文内容">8.1. 列表行中正文内容</a></p>
+<p></p>
+<h1 id="N9. 表格类"><a href="#toc-9. 表格类">9. 表格类</a></h1>
+<p>表格类分为单行表格行和多行表格行，多行表格行是指一个表格行由多行组成。</p>
+<p>区分出多行表格行主要是为了实现表格内列表。</p>
+<p>两个不同的表格不能紧挨着，必须用其它行隔开。否则会出错。</p>
+<p>表格行中的单元格用 #| 字符串来区隔。</p>
+<p>行尾不必也不能用 #| 结尾。</p>
+<p></p>
+<h2 id="N9.1. 表格行中正文内容"><a href="#toc-9.1. 表格行中正文内容">9.1. 表格行中正文内容</a></h2>
+<p>格式：<code> AAA AAA是任意字符</code></p>
+<p>行首尾：无特殊约定</p>
+<p>禁用字符：#|</p>
+<p>字符替换：&lt; &gt; #` 分别被替换为 &amp;lt; &amp;gt; `</p>
+<p>内部格式：与普通格式正文行一样，允许短代码、行代码、内链、外链、图片。注意：表格行中谨慎使用行代码，因为行代码不解析其后格式字符。</p>
+<p>说明：</p>
+<p>示例：</p>
+<p>源文本：</p>
+<figure>
+	<figcaption class="-cap">
+		<cite class=""></cite>
+	</figcaption>
+<pre><code>
+<span class="line">下面是一个表格</span>
+<span class="line">#| aa  #|  bb  #|&gt; cc</span>
+<span class="line">#|-----------------</span>
+<span class="line">#| #-a1#|  b1  #|^ c1</span>
+<span class="line">#| #-a2#| `#|` #| c2</span>
+<span class="line">#|-----------------</span>
+<span class="line">#|-----------------</span>
+<span class="line">#| a3  #|#--b3 #| </span>
+<span class="line">#|`[[` #| #-b4 #|^ c4</span>
+<span class="line">#| a5  #|   #--#| cccccccccc</span>
+<span class="line">#|-----------------</span>
+</code></pre></figure>
+<p>实际效果：</p>
+<p>下面是一个表格</p>
+<table>
+<tr>
+<td> aa  </td>
+<td>  bb  </td>
+<td class="t_right"> cc</td>
+</tr>
+<tr>
+</ul>
+<td><ul>
+<li>a1</li>
+<li>a2</li>
+</td>
+<td>  b1  <br /> <code>#|</code> </td>
+<td class="t_center"> c1<br /> c2</td>
+</tr>
+<tr>
+<td> a3  <br /><code>[[</code> <br /> a5  </td>
+<td><ul>
+<li><span>b3 </span>
+<ul>
+<li>b4 </li>
+</ul>
+</li>
+</ul>
+</td>
+<td> <br />^ c4<br /> cccccccccc</td>
+</tr>
+</table>
+<p></p>
+<h2 id="N9.2. 单行表格行"><a href="#toc-9.2. 单行表格行">9.2. 单行表格行</a></h2>
+<p>格式：<code> ^#|GAAA#|GBBB...#|GNNN$ G是对齐字符 &lt; 表示左对齐， &gt; 表示右对齐， ^ 表示居中对齐</code></p>
+<p>行首尾：行首不允许有空白字符，行尾通常不允许有#|</p>
+<p>禁用字符：#|</p>
+<p>字符替换：&lt; &gt; #` 分别被替换为 &amp;lt; &amp;gt; `</p>
+<p>内部格式：见<a href="#N9.1. 表格行中正文内容">9.1. 表格行中正文内容</a></p>
+<p>说明：单行表格行根据用途可分为：表格开始行、单独一行的表格行、多行表格开始行、多行表格后续行。</p>
+<p>如果是表格开始行、单独一行表格行、多行表格行开始行，对齐字符有效。如果是多行表格行的后续行，则对齐字符无效，当成普通字符处理。</p>
+<p>示例：</p>
+<p>参见<a href="#N9.1. 表格行中正文内容">9.1. 表格行中正文内容</a></p>
+<p></p>
+<h2 id="N9.3. 多行表格行SE"><a href="#toc-9.3. 多行表格行SE">9.3. 多行表格行SE</a></h2>
+<p>格式：<code> ^#|-AAA$ AAA是任意无用字符，不参与解析和输出，仅用于填充。</code></p>
+<p>行首尾：行首不允许有空白字符，行尾的任意字符无实际用处。</p>
+<p>禁用字符：无</p>
+<p>字符替换：无</p>
+<p>内部格式：无</p>
+<p>说明：多行表格行SE成对出现，第一个多行表格行SE表示多行表格行开始，第二个多行表格行SE表示多行表格结束。</p>
+<p>示例：</p>
+<p>参见<a href="#N9.1. 表格行中正文内容">9.1. 表格行中正文内容</a></p>
+<p></p>
+<h1 id="N10. 内嵌html类"><a href="#toc-10. 内嵌html类">10. 内嵌html类</a></h1>
+<p>内嵌html类分为内嵌html多行S和内嵌html多行E。</p>
+<p>内嵌html类不对其字符进行任何转义，直接输出。</p>
+<p></p>
+<h2 id="N10.1. 内嵌html中正文内容"><a href="#toc-10.1. 内嵌html中正文内容">10.1. 内嵌html中正文内容</a></h2>
+<p>格式：<code> ^AAA$ AAA是任意字符</code></p>
+<p>行首尾：无特殊约定</p>
+<p>禁用字符：无</p>
+<p>字符替换：无</p>
+<p>内部格式：所有格式字符失效，也不进行任何替换，直接原样输出。</p>
+<p>说明：</p>
+<p>示例：</p>
+<p>源文本：</p>
+<figure>
+	<figcaption class="-cap">
+		<cite class=""></cite>
+	</figcaption>
+<pre><code>
+<span class="line">#&lt;&lt;</span>
+<span class="line">&lt;b&gt;加粗字符串&lt;/b&gt;&lt;br /&gt;</span>
+<span class="line">&lt;i&gt;斜体字符串&lt;/i&gt;&lt;br /&gt;</span>
+<span class="line">#&gt;&gt;</span>
+</code></pre></figure>
+<p>实际效果：</p>
+<b>加粗字符串</b><br /><i>斜体字符串</i><br /><p></p>
+<h2 id="N10.2. 内嵌html多行S"><a href="#toc-10.2. 内嵌html多行S">10.2. 内嵌html多行S</a></h2>
+<p>格式：<code> ^#&lt;&lt;AAA$ AAA是任意无用字符，不参与解析和输出，仅用于填充。</code></p>
+<p>行首尾：行首不允许有空白字符，行尾的任意字符无实际用处。</p>
+<p>禁用字符：无</p>
+<p>字符替换：无</p>
+<p>内部格式：无</p>
+<p>说明：内嵌html多行S和内嵌html多行E成对出现，缺一不可。</p>
+<p>示例：</p>
+<p>参见<a href="#N10.1. 内嵌html中正文内容">10.1. 内嵌html中正文内容</a></p>
+<p></p>
+<h2 id="N10.3. 内嵌html多行E"><a href="#toc-10.3. 内嵌html多行E">10.3. 内嵌html多行E</a></h2>
+<p>格式：<code> ^#&gt;&gt;AAA$ AAA是任意无用字符，不参与解析和输出，仅用于填充。</code></p>
+<p>行首尾：行首不允许有空白字符，行尾的任意字符无实际用处。</p>
+<p>禁用字符：无</p>
+<p>字符替换：无</p>
+<p>内部格式：无</p>
+<p>说明：内嵌html多行S和内嵌html多行E成对出现，缺一不可。</p>
+<p>示例：</p>
+<p>参见<a href="#N10.1. 内嵌html中正文内容">10.1. 内嵌html中正文内容</a></p>
+<p></p>
+<h1 id="N11. 作者及版权说明"><a href="#toc-11. 作者及版权说明">11. 作者及版权说明</a></h1>
+<p>编写时间：2022年11月</p>
+<p>作者联系方式：sx_wangzhiwen@163.com；</p>
+<p>网址：</p>
+<p><a href="https://gitee.com/sxwangzhiwen/">gitee sxwangzhiwen</a></p>
+<p><a href="https://github.com/sxwangzhiwen/">github sxwangzhiwen</a></p>
+<p></p>
+<p>本文档版权声明为：</p>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可。</div>
+</main>
+</body>
+</html>
