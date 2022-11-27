@@ -20,10 +20,11 @@ $ progdoc xxx
 三、progdoc文档格式说明
 
 progdoc文档格式请看：
+
 [国外github]( https://sxwangzhiwen.github.io/progdoc/progdoc.html)
 
 
-[国内gitee]( https://sxwangzhiwen.gitee.io/progdoc/progdoc.html)
+[国内gitee]( https://gitee.com/sxwangzhiwen/progdoc)
 
 
 四、无英文说明
