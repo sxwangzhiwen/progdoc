@@ -109,7 +109,7 @@ const progdoc_err = error{
     @"内嵌html多行没有结束行",
 };
 
-const @"Tprogdoc格式转换状态机" = struct {
+pub const @"Tprogdoc格式转换状态机" = struct {
     in: []const u8, // 读取缓冲区
     out: std.ArrayList(u8), // 多行表格行输出时，需要暂时变到多行输出缓冲
     @"行号": usize = 1, // 主要用于出错信息显示
