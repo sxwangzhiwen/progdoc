@@ -35,7 +35,7 @@ pub fn main() !void {
 
     // 获取不包含后缀的文件名
     var iend: usize = 0;
-    _ = @"Fn当前行查找字符"(args[1], 0, '.', &iend);
+    _ = progdoc.@"Fn当前行查找字符"(args[1], 0, '.', &iend);
     const fname = args[1][0..iend];
 
     //打开输入文件名，并一次性读入到内存
