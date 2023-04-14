@@ -1574,6 +1574,10 @@ pub const @"Tprogdoc格式转换状态机" = struct {
         try self.out.appendSlice(html.htmlhead1);
     }
 
+    fn setStyle(self: *@"Tprogdoc格式转换状态机") !void {
+        try self.out.appendSlice(html.style);
+    }
+
     fn @"Fn文件尾"(self: *@"Tprogdoc格式转换状态机") !void {
         try self.@"目录".appendSlice("</ul>\r\n</div>\r\n");
         try self.out.insertSlice(self.@"插入目录位置", self.@"目录".items);
@@ -1605,6 +1609,14 @@ pub const @"Tprogdoc格式转换状态机" = struct {
         }
         try self.@"Fn文件结尾状态处理"();
         try self.@"Fn文件尾"();
+    }
+
+    pub fn parseProgdoc2(self: *@"Tprogdoc格式转换状态机") !void {
+        try self.setStyle();
+        while (!self.@"is输入尾部") {
+            try self.parseline();
+        }
+        try self.@"Fn文件结尾状态处理"();
     }
 };
 
